@@ -15,8 +15,6 @@ export default LaunchScreen;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
     backgroundColor: colors["background-dark"],
     flex: 1,
     justifyContent: "center",
