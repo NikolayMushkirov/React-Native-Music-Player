@@ -2,8 +2,8 @@ export const colors = {
   "background-light": "#FFFFFF",
   "background-dark": "#000",
 
-  text: "#FFFFFF",
-  secText: "#8A9A9D",
+  white: "#FFFFFF",
+  grey: "#8A9A9D",
 
   "blue-color-1": "#1DB1B7",
   "blue-color-2": "#44D7DD",

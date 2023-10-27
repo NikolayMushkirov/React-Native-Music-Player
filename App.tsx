@@ -3,14 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import LaunchScreen from "./src/screens/LaunchScreen";
 import { PlusButton } from "./src/components/buttons/Buttons";
 import { colors } from "./src/ui/colors";
-import SongScreen from "./src/screens/SongScreen";
+import NowPlayingScreen from "./src/screens/NowPlayingScreen";
 
 export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      {/* <LaunchScreen /> */}
-      <SongScreen />
+
+      <NowPlayingScreen />
     </View>
   );
 }
