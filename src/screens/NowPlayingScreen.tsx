@@ -5,44 +5,79 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Dimensions,
+  SafeAreaView,
+  Animated,
 } from "react-native";
 import TrackPlayer, { useProgress } from "react-native-track-player";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import IonIcons from "react-native-vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
 import { colors } from "../ui/colors";
 
-import { songsData } from "../utils/data";
+import { IMusicData, musicData } from "../utils/data";
+
+const { width, height } = Dimensions.get("window");
 
 const NowPlayingScreen = () => {
   const [shuffle, setShuffle] = useState(false);
+  const [musicTrack, setMusicTrack] = useState(0);
+
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   const handleChangeShuffle = () => setShuffle(!shuffle);
 
-  const renderSongs = ({ item, index }) => {
+  const renderMusicTracks = ({
+    item,
+    index,
+  }: {
+    item: IMusicData;
+    index: number;
+  }) => {
     return (
-      <View>
-        <Image source={require("../../assets/placeholder.png")} />
-      </View>
+      <Animated.View style={styles.albumCoverContainer}>
+        <View style={[styles.albumCoverBox, styles.elevation]}>
+          <Image source={item.albumCover} style={styles.albumCover} />
+        </View>
+      </Animated.View>
     );
   };
 
-  return (
-    <View>
-      <View>
-        {/* <FlatList
-          data={songsData}
-          renderItem={renderSongs}
-          keyExtractor={(item) => item.id}
-        /> */}
+  useEffect(() => {
+    scrollX.addListener(({ value }) => {
+      const index = Math.round(value / width);
+      setMusicTrack(index);
+    });
+  }, []);
 
-        <Text style={styles.songName}>Song name</Text>
-      </View>
+  return (
+    <SafeAreaView style={styles.wrapper}>
+      <Animated.FlatList
+        data={musicData}
+        renderItem={renderMusicTracks}
+        keyExtractor={(item) => item.id}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: { x: scrollX },
+              },
+            },
+          ],
+          { useNativeDriver: true }
+        )}
+      />
+
+      <Text style={styles.songName}>{musicData[musicTrack].artist}</Text>
 
       <View style={styles.artistContainer}>
-        <Text style={styles.artistName}>Artist name</Text>
+        <Text style={styles.artistName}>{musicData[musicTrack].title}</Text>
 
         <View style={styles.likeButtonBox}>
           <TouchableOpacity>
@@ -133,13 +168,46 @@ const NowPlayingScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default NowPlayingScreen;
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    paddingBottom: "10%",
+  },
+
+  albumCoverContainer: {
+    width: width,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  albumCoverBox: {
+    width: width,
+    height: 350,
+  },
+  albumCover: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 15,
+  },
+
+  elevation: {
+    elevation: 5,
+
+    shadowColor: "#ccc",
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+  },
+
   artistContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
