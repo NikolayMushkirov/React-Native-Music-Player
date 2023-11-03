@@ -1,34 +1,30 @@
+import React, { useRef } from "react";
+
 import {
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
-  FlatList,
   Dimensions,
   SafeAreaView,
   Animated,
 } from "react-native";
-import TrackPlayer, { useProgress } from "react-native-track-player";
-import React, { useEffect, useRef, useState } from "react";
+
+import Slider from "@react-native-community/slider";
+
 import AntIcon from "react-native-vector-icons/AntDesign";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import IonIcons from "react-native-vector-icons/Ionicons";
-import Slider from "@react-native-community/slider";
+
 import { colors } from "../ui/colors";
 
 import { IMusicData, musicData } from "../utils/data";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const NowPlayingScreen = () => {
-  const [shuffle, setShuffle] = useState(false);
-  const [musicTrack, setMusicTrack] = useState(0);
-
   const scrollX = useRef(new Animated.Value(0)).current;
-
-  const handleChangeShuffle = () => setShuffle(!shuffle);
-
   const renderMusicTracks = ({
     item,
     index,
@@ -39,18 +35,11 @@ const NowPlayingScreen = () => {
     return (
       <Animated.View style={styles.albumCoverContainer}>
         <View style={[styles.albumCoverBox, styles.elevation]}>
-          <Image source={item.albumCover} style={styles.albumCover} />
+          <Image source={item.artwork} style={styles.albumCover} />
         </View>
       </Animated.View>
     );
   };
-
-  useEffect(() => {
-    scrollX.addListener(({ value }) => {
-      const index = Math.round(value / width);
-      setMusicTrack(index);
-    });
-  }, []);
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -74,10 +63,10 @@ const NowPlayingScreen = () => {
         )}
       />
 
-      <Text style={styles.songName}>{musicData[musicTrack].artist}</Text>
+      <Text style={styles.songName}>Artist name</Text>
 
       <View style={styles.artistContainer}>
-        <Text style={styles.artistName}>{musicData[musicTrack].title}</Text>
+        <Text style={styles.artistName}>Title</Text>
 
         <View style={styles.likeButtonBox}>
           <TouchableOpacity>
@@ -133,13 +122,27 @@ const NowPlayingScreen = () => {
               color={colors["blue-color-4"]}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <IonIcons
-              name="ios-play-circle"
-              size={75}
-              color={colors["blue-color-4"]}
-            />
-          </TouchableOpacity>
+
+          {isPlaying ? (
+            <TouchableOpacity>
+              <IonIcons
+                name="ios-pause-circle"
+                size={75}
+                color={colors["blue-color-4"]}
+                onPress={pause}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity>
+              <IonIcons
+                name="ios-play-circle"
+                size={75}
+                color={colors["blue-color-4"]}
+                onPress={play}
+              />
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity>
             <IonIcons
               name="play-skip-forward-outline"

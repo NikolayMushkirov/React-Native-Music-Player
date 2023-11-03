@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import LaunchScreen from "./src/screens/LaunchScreen";
-import { PlusButton } from "./src/components/buttons/Buttons";
+
 import { colors } from "./src/ui/colors";
 import NowPlayingScreen from "./src/screens/NowPlayingScreen";
 
