@@ -20,8 +20,23 @@ import IonIcons from "react-native-vector-icons/Ionicons";
 import { colors } from "../ui/colors";
 
 import { IMusicData, musicData } from "../utils/data";
+import useSound from "../hooks/useSound";
 
 const { width } = Dimensions.get("window");
+
+const {
+  isPlaying,
+  duration,
+  setSource,
+  play,
+  pause,
+  position,
+  progress,
+  playFromPosition,
+  setFinishFunc,
+  handleChangeShuffle,
+  shuffle,
+} = useSound();
 
 const NowPlayingScreen = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -35,7 +50,7 @@ const NowPlayingScreen = () => {
     return (
       <Animated.View style={styles.albumCoverContainer}>
         <View style={[styles.albumCoverBox, styles.elevation]}>
-          <Image source={item.artwork} style={styles.albumCover} />
+          <Image source={item.preview.uri} style={styles.albumCover} />
         </View>
       </Animated.View>
     );
