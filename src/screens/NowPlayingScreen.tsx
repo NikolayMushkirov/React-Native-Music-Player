@@ -13,14 +13,21 @@ import {
 
 import Slider from "@react-native-community/slider";
 
-import AntIcon from "react-native-vector-icons/AntDesign";
-import MaterialIcon from "react-native-vector-icons/MaterialIcons";
-import IonIcons from "react-native-vector-icons/Ionicons";
-
 import { colors } from "../ui/colors";
 
 import { IMusicData, musicData } from "../utils/data";
 import useSound from "../hooks/useSound";
+import {
+  EqualizerButton,
+  HeartButton,
+  PauseButton,
+  PlayButton,
+  PlusButton,
+  ShareButton,
+  ShuffleButton,
+  SkipBackButton,
+  SkipForwardButton,
+} from "../components/buttons/Buttons";
 
 const { width } = Dimensions.get("window");
 
@@ -84,22 +91,8 @@ const NowPlayingScreen = () => {
         <Text style={styles.artistName}>Title</Text>
 
         <View style={styles.likeButtonBox}>
-          <TouchableOpacity>
-            <IonIcons
-              name="share-social-outline"
-              color={colors.white}
-              size={23}
-              onPress={() => alert("pressed")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <IonIcons
-              name="heart-outline"
-              color={colors.white}
-              size={23}
-              onPress={() => alert("pressed")}
-            />
-          </TouchableOpacity>
+          <ShareButton />
+          <HeartButton />
         </View>
       </View>
 
@@ -121,69 +114,22 @@ const NowPlayingScreen = () => {
       </View>
 
       <View style={styles.mediaButtonsContainer}>
-        <TouchableOpacity>
-          <MaterialIcon
-            name="shuffle"
-            color={shuffle ? colors.white : colors.grey}
-            size={23}
-            onPress={handleChangeShuffle}
-          />
-        </TouchableOpacity>
+        <ShuffleButton
+          shuffle={shuffle}
+          handleChangeShuffle={handleChangeShuffle}
+        />
         <View style={styles.playButtonsBox}>
-          <TouchableOpacity>
-            <IonIcons
-              name="play-skip-back-outline"
-              size={35}
-              color={colors["blue-color-4"]}
-            />
-          </TouchableOpacity>
-
+          <SkipBackButton />
           {isPlaying ? (
-            <TouchableOpacity>
-              <IonIcons
-                name="ios-pause-circle"
-                size={75}
-                color={colors["blue-color-4"]}
-                onPress={pause}
-              />
-            </TouchableOpacity>
+            <PauseButton pause={pause} />
           ) : (
-            <TouchableOpacity>
-              <IonIcons
-                name="ios-play-circle"
-                size={75}
-                color={colors["blue-color-4"]}
-                onPress={play}
-              />
-            </TouchableOpacity>
+            <PlayButton play={play} />
           )}
-
-          <TouchableOpacity>
-            <IonIcons
-              name="play-skip-forward-outline"
-              size={35}
-              color={colors["blue-color-4"]}
-            />
-          </TouchableOpacity>
+          <SkipForwardButton />S
         </View>
         <View style={styles.equalizerButtonsBox}>
-          <TouchableOpacity>
-            <MaterialIcon
-              style={{ margin: 0, padding: 0 }}
-              name="equalizer"
-              size={23}
-              color={colors.white}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <AntIcon
-              style={{ margin: 0, padding: 0 }}
-              name="plus"
-              size={23}
-              color={colors.white}
-            />
-          </TouchableOpacity>
+          <EqualizerButton />
+          <PlusButton />
         </View>
       </View>
     </SafeAreaView>
