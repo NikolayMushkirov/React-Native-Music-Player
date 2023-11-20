@@ -9,9 +9,9 @@ import {
 } from "expo-av";
 import { Sound } from "expo-av/build/Audio";
 
-const useSound = (initSource: AVPlaybackSource) => {
-  const [source, setSource] = useState<AVPlaybackSource>(initSource);
-  const [sound, setSound] = useState<Sound | null>(null);
+const useSound = () => {
+  const [source, setSource] = useState<AVPlaybackSource>();
+  const [sound, setSound] = useState<Sound | null>();
   const [duration, setDuration] = useState("00:00");
   const [position, setPosition] = useState("00:00");
   const [progress, setProgress] = useState(0);
@@ -58,7 +58,7 @@ const useSound = (initSource: AVPlaybackSource) => {
     setDuration(getMusicTrackTime(status.durationMillis));
     setSound(sound);
 
-    if (source.shouldPlay) {
+    if (source?.shouldPlay) {
       sound && (await sound.playAsync());
       setIsPlaying(true);
     }
@@ -76,7 +76,7 @@ const useSound = (initSource: AVPlaybackSource) => {
     const status = await sound?.getStatusAsync();
     const progress = status?.positionMillis / status?.durationMillis;
 
-    setPosition(getMusicTrackTime(status.positionMillis));
+    setPosition(getMusicTrackTime(status?.positionMillis));
     setProgress(progress);
 
     if (progress === 1) {

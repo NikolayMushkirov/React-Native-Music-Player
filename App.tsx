@@ -1,17 +1,20 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View  } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import LaunchScreen from "./src/screens/LaunchScreen";
 
 import { colors } from "./src/ui/colors";
-import NowPlayingScreen from "./src/screens/NowPlayingScreen";
+import MusicPlayingScreen from "./src/screens/MusicPlayingScreen";
+import MusicList from "./src/screens/MusicList";
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
+      <MusicList/>
 
-      <NowPlayingScreen />
-    </View>
+      {/* <MusicPlayingScreen /> */}
+    </SafeAreaView>
   );
 }
 
