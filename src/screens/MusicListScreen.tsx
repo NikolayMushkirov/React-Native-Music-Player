@@ -5,15 +5,14 @@ import { musicData } from "../utils/data";
 
 type Props = {};
 
-const MusicList = (props: Props) => {
+const MusicListScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
-
         data={musicData}
         renderItem={({ item }) => (
           <MusicListItem
-            albumCover={item.preview}
+            albumCover={item.albumCover}
             title={item.title}
             artist={item.artist}
           />
@@ -23,15 +22,12 @@ const MusicList = (props: Props) => {
   );
 };
 
-export default MusicList;
+export default MusicListScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
     backgroundColor: "white",
-
   },
-
-
 });

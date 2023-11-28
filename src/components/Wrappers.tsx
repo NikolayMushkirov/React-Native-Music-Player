@@ -11,6 +11,13 @@ import {
   SkipForwardButton,
 } from "./Buttons";
 
+type Props = {
+  isPlaying: boolean;
+  pause: () => Promise<void>;
+  play: () => Promise<void>;
+  next: () => void;
+  prev: () => void;
+};
 const LikeButtonsBox = () => {
   return (
     <View style={styles.likeButtonsBox}>
@@ -19,20 +26,13 @@ const LikeButtonsBox = () => {
     </View>
   );
 };
-const PlayButtonsBox = ({
-  isPlaying,
-  pause,
-  play,
-}: {
-  isPlaying: boolean;
-  pause: () => Promise<void>;
-  play: () => Promise<void>;
-}) => {
+
+const PlayButtonsBox = ({ isPlaying, pause, play, next, prev }: Props) => {
   return (
     <View style={styles.playButtonsBox}>
-      <SkipBackButton />
+      <SkipBackButton prev={prev} />
       {isPlaying ? <PauseButton pause={pause} /> : <PlayButton play={play} />}
-      <SkipForwardButton />S
+      <SkipForwardButton next={next} />
     </View>
   );
 };

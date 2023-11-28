@@ -48,24 +48,26 @@ const ShuffleButton = ({
     </TouchableOpacity>
   );
 };
-const SkipBackButton = () => {
+const SkipBackButton = ({ prev }: { prev: () => void }) => {
   return (
     <TouchableOpacity>
       <IonIcons
         name="play-skip-back-outline"
         size={35}
         color={colors["blue-color-4"]}
+        onPress={prev}
       />
     </TouchableOpacity>
   );
 };
-const SkipForwardButton = () => {
+const SkipForwardButton = ({ next }: { next: () => void }) => {
   return (
     <TouchableOpacity>
       <IonIcons
         name="play-skip-forward-outline"
         size={35}
         color={colors["blue-color-4"]}
+        onPress={next}
       />
     </TouchableOpacity>
   );
