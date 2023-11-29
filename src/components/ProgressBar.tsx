@@ -1,9 +1,13 @@
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
 import { colors } from "../ui/colors";
-type Props = {};
+type Props = {
+  duration: string;
+  position: string;
+  progress: number;
+};
 
-const ProgressBar = (props: Props) => {
+const ProgressBar = ({ duration, position, progress }: Props) => {
   return (
     <View>
       <View>
@@ -19,8 +23,8 @@ const ProgressBar = (props: Props) => {
         />
       </View>
       <View style={styles.progressDurationContainer}>
-        <Text style={styles.progressDuration}>00:00</Text>
-        <Text style={styles.progressDuration}>00:00</Text>
+        <Text style={styles.progressDuration}>{position}</Text>
+        <Text style={styles.progressDuration}>{duration}</Text>
       </View>
     </View>
   );

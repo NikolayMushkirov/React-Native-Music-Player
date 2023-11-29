@@ -14,11 +14,13 @@ import { colors } from "../ui/colors";
 type Props = {
   selectedTrack: number;
   scrollX: Animated.Value;
+  prev: () => void;
+  next: () => void;
 };
 
 const { width } = Dimensions.get("window");
 
-const MusicTrackSlider = ({ selectedTrack, scrollX , prev, next }: Props) => {
+const MusicTrackSlider = ({ selectedTrack, scrollX, prev, next }: Props) => {
   const renderMusicTracks = () => {
     console.log(selectedTrack, "selectedTrack");
     return (
