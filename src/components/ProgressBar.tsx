@@ -5,21 +5,27 @@ type Props = {
   duration: string;
   position: string;
   progress: number;
+  playFromPosition: (progress: number) => Promise<void>;
 };
 
-const ProgressBar = ({ duration, position, progress }: Props) => {
+const ProgressBar = ({
+  duration,
+  position,
+  progress,
+  playFromPosition,
+}: Props) => {
   return (
     <View>
       <View>
         <Slider
           style={styles.progressBar}
-          value={10}
+          value={progress}
           minimumValue={0}
-          maximumValue={100}
+          maximumValue={1}
           thumbTintColor={colors["blue-color-4"]}
           minimumTrackTintColor={colors["blue-color-4"]}
           maximumTrackTintColor="#fff"
-          onSlidingComplete={() => {}}
+          onSlidingComplete={(position) => playFromPosition(position)}
         />
       </View>
       <View style={styles.progressDurationContainer}>

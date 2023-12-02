@@ -1,5 +1,5 @@
 import React from "react";
-
+import { FlatList } from "react-native";
 import {
   Animated,
   Dimensions,
@@ -14,15 +14,15 @@ import { colors } from "../ui/colors";
 type Props = {
   selectedTrack: number;
   scrollX: Animated.Value;
+  flatListRef: React.LegacyRef<FlatList<IMusicData>> | null;
   prev: () => void;
   next: () => void;
 };
 
 const { width } = Dimensions.get("window");
 
-const MusicTrackSlider = ({ selectedTrack, scrollX, prev, next }: Props) => {
+const MusicTrackSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
   const renderMusicTracks = () => {
-    console.log(selectedTrack, "selectedTrack");
     return (
       <Animated.View style={styles.musicTrackContainer}>
         <View style={[styles.musicTrackBox, styles.elevation]}>
@@ -44,6 +44,7 @@ const MusicTrackSlider = ({ selectedTrack, scrollX, prev, next }: Props) => {
   };
   return (
     <Animated.FlatList
+      ref={flatListRef}
       data={musicData}
       renderItem={renderMusicTracks}
       keyExtractor={(item) => item.id}
@@ -52,17 +53,9 @@ const MusicTrackSlider = ({ selectedTrack, scrollX, prev, next }: Props) => {
       showsHorizontalScrollIndicator={false}
       scrollEventThrottle={16}
       onScroll={Animated.event(
-        [
-          {
-            nativeEvent: {
-              contentOffset: { x: scrollX },
-            },
-          },
-        ],
+        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         { useNativeDriver: true }
       )}
-      onScrollBeginDrag={prev}
-      onScrollEndDrag={next}
     />
   );
 };

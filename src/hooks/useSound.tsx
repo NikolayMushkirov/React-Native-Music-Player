@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Audio,
   InterruptionModeIOS,
@@ -11,44 +11,45 @@ import { Sound } from "expo-av/build/Audio";
 import { musicData } from "../utils/data";
 
 const useSound = () => {
-  const [sound, setSound] = useState<Sound | undefined>();
+  const [sound, setSound] = useState<Sound | undefined | null>();
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [selectedTrack, setSelectedTrack] = useState<number>(0);
-  const [musicTrackSource, setMusicTrackSource] = useState<{
-    uri: string;
-  } | null>(null);
+  const [musicTrackSource, setMusicTrackSource] = useState(
+    musicData[selectedTrack].url
+  );
 
-  const [duration, setDuration] = useState("00:00");
   const [position, setPosition] = useState("00:00");
+  const [duration, setDuration] = useState("00:00");
   const [progress, setProgress] = useState(0);
+  console.log(selectedTrack, "selectedTrack");
 
   const [finishFunc, setFinishFunc] = useState(() => {});
-
-  const [scrollIndex, setScrollIndex] = useState(selectedTrack);
 
   const [shuffle, setShuffle] = useState(false);
 
   const startMusicPlay = (index: number) => {
     if (index !== null) {
-      setMusicTrackSource({
-        uri: musicData[selectedTrack].url,
-      });
+      setMusicTrackSource(musicData[index].url);
+      setSelectedTrack(index);
     } else {
-      setMusicTrackSource(null);
+      setMusicTrackSource("");
     }
-    setSelectedTrack(index);
   };
 
   const prev = () => {
     const index =
       selectedTrack === 0 ? musicData.length - 1 : selectedTrack - 1;
+
     startMusicPlay(index);
+    console.log("prev");
   };
   const next = () => {
     const index =
       selectedTrack === musicData.length - 1 ? 0 : selectedTrack + 1;
-    startMusicPlay(index);
+
+      startMusicPlay(index);
+      play();
     console.log("next");
   };
 
@@ -68,12 +69,15 @@ const useSound = () => {
     }
   };
 
-  const playFromPosition = async (position: string) => {
+  const playFromPosition = async (progress: number) => {
     if (sound) {
       const status = await sound.getStatusAsync();
-      const milliSec = Math.ceil(status.durationMillis * progress);
-      await sound.setPositionAsync(milliSec);
-      calcPositionProgress();
+      if (status.isLoaded && status.durationMillis) {
+        console.log(progress, "progress");
+        const milliSec = Math.ceil(status.durationMillis * progress);
+        await sound.setPositionAsync(milliSec);
+        calcPositionProgress();
+      }
     }
   };
 
@@ -86,18 +90,20 @@ const useSound = () => {
   };
 
   const loadSound = async () => {
-    const { sound } = await Audio.Sound.createAsync({
-      uri: musicData[selectedTrack].url,
-    });
-    const status: AVPlaybackStatus = await sound.getStatusAsync();
-    setDuration(getMusicTrackTime(status.durationMillis));
-    setSound(sound);
-
-    if (musicTrackSource?.shouldPlay) {
-      sound && (await sound.playAsync());
-      setIsPlaying(true);
+    const { sound } = await Audio.Sound.createAsync({ uri: musicTrackSource });
+    const status = await sound.getStatusAsync();
+    if (status.isLoaded && status.durationMillis) {
+      setDuration(getMusicTrackTime(status.durationMillis));
+      setSound(sound);
     }
+
+    // if (musicTrackSource?.uri) {
+    //   sound && (await sound.playAsync());
+    //   setIsPlaying(true);
+    // }
   };
+
+  console.log(musicTrackSource, "source");
 
   const unloadSound = async () => {
     setIsPlaying(false);
@@ -109,28 +115,18 @@ const useSound = () => {
 
   const calcPositionProgress = async () => {
     const status = await sound?.getStatusAsync();
-    if (status?.isLoaded) {
+    if (status?.isLoaded && status.durationMillis) {
       const progress = status?.positionMillis / status?.durationMillis;
       console.log(progress, "progress");
-
       setPosition(getMusicTrackTime(status?.positionMillis));
       setProgress(progress);
     }
 
     if (progress === 1) {
       pause();
-      finishFunc();
+      // finishFunc();
     }
   };
-
-  useEffect(() => {
-    return sound
-      ? () => {
-          console.log("Unloading Sound");
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
 
   useEffect(() => {
     Audio.setAudioModeAsync({
