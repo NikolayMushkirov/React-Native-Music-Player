@@ -1,11 +1,11 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import React from "react";
+
 import MusicListItem from "../components/MusicListItem";
 import { musicData } from "../utils/data";
 
 type Props = {};
 
-const MusicListScreen = (props: Props) => {
+const ListScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
@@ -22,7 +22,7 @@ const MusicListScreen = (props: Props) => {
   );
 };
 
-export default MusicListScreen;
+export default ListScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -4,16 +4,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import LaunchScreen from "./src/screens/LaunchScreen";
 
 import { colors } from "./src/ui/colors";
-import MusicPlayScreen from "./src/screens/MusicPlayScreen";
-import MusicListScreen from "./src/screens/MusicListScreen";
+import PlayScreen from "./src/screens/PlayScreen";
+import ListScreen from "./src/screens/ListScreen";
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      {/* <MusicList/> */}
+      {/* <ListScreen/> */}
 
-      <MusicPlayScreen />
+      <PlayScreen />
     </SafeAreaView>
   );
 }

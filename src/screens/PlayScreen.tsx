@@ -12,12 +12,12 @@ import { ShuffleButton } from "../components/Buttons";
 import ProgressBar from "../components/ProgressBar";
 import { EqualizerButtonsBox, PlayButtonsBox } from "../components/Wrappers";
 
-import MusicTrackSlider from "../components/MusicTrackSlider";
+import MusicTracksSlider from "../components/MusicTracksSlider";
 import useSound from "../hooks/useSound";
 
 const { width } = Dimensions.get("window");
 
-const MusicPlayScreen = () => {
+const PlayScreen = () => {
   const {
     isPlaying,
     selectedTrack,
@@ -55,7 +55,7 @@ const MusicPlayScreen = () => {
 
   return (
     <SafeAreaView style={styles.wrapper}>
-      <MusicTrackSlider
+      <MusicTracksSlider
         selectedTrack={selectedTrack}
         scrollX={scrollX}
         prev={prev}
@@ -87,7 +87,7 @@ const MusicPlayScreen = () => {
   );
 };
 
-export default MusicPlayScreen;
+export default PlayScreen;
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -1,5 +1,3 @@
-import React from "react";
-import { FlatList } from "react-native";
 import {
   Animated,
   Dimensions,
@@ -7,6 +5,7 @@ import {
   Text,
   Image,
   StyleSheet,
+  FlatList,
 } from "react-native";
 import { IMusicData, musicData } from "../utils/data";
 import { colors } from "../ui/colors";
@@ -21,7 +20,7 @@ type Props = {
 
 const { width } = Dimensions.get("window");
 
-const MusicTrackSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
+const MusicTracksSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
   const renderMusicTracks = () => {
     return (
       <Animated.View style={styles.musicTrackContainer}>
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
 
   elevation: {
     elevation: 5,
-
     shadowColor: "#ccc",
     shadowOffset: {
       width: 5,
@@ -109,4 +107,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MusicTrackSlider;
+export default MusicTracksSlider;

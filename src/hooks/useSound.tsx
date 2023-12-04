@@ -1,12 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import {
-  Audio,
-  InterruptionModeIOS,
-  InterruptionModeAndroid,
-  AVPlaybackSource,
-  AVPlaybackStatusError,
-  AVPlaybackStatus,
-} from "expo-av";
+import { useEffect, useState } from "react";
+import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 import { Sound } from "expo-av/build/Audio";
 import { musicData } from "../utils/data";
 
@@ -24,14 +17,12 @@ const useSound = () => {
   const [progress, setProgress] = useState(0);
   console.log(selectedTrack, "selectedTrack");
 
-  const [finishFunc, setFinishFunc] = useState(() => {});
-
   const [shuffle, setShuffle] = useState(false);
 
   const startMusicPlay = (index: number) => {
     if (index !== null) {
-      setMusicTrackSource(musicData[index].url);
       setSelectedTrack(index);
+      setMusicTrackSource(musicData[index].url);
     } else {
       setMusicTrackSource("");
     }
@@ -48,8 +39,8 @@ const useSound = () => {
     const index =
       selectedTrack === musicData.length - 1 ? 0 : selectedTrack + 1;
 
-      startMusicPlay(index);
-      play();
+    startMusicPlay(index);
+    play();
     console.log("next");
   };
 
@@ -96,14 +87,7 @@ const useSound = () => {
       setDuration(getMusicTrackTime(status.durationMillis));
       setSound(sound);
     }
-
-    // if (musicTrackSource?.uri) {
-    //   sound && (await sound.playAsync());
-    //   setIsPlaying(true);
-    // }
   };
-
-  console.log(musicTrackSource, "source");
 
   const unloadSound = async () => {
     setIsPlaying(false);
@@ -124,7 +108,6 @@ const useSound = () => {
 
     if (progress === 1) {
       pause();
-      // finishFunc();
     }
   };
 
@@ -165,7 +148,6 @@ const useSound = () => {
     position,
     progress,
     playFromPosition,
-    setFinishFunc,
     shuffle,
     handleChangeShuffle,
   };
