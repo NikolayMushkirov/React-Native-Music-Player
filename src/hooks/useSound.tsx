@@ -7,7 +7,7 @@ const useSound = () => {
   const [sound, setSound] = useState<Sound | undefined | null>();
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const [selectedTrack, setSelectedTrack] = useState<number>(0);
+  const [selectedTrack, setSelectedTrack] = useState(0);
   const [musicTrackSource, setMusicTrackSource] = useState(
     musicData[selectedTrack].url
   );
@@ -29,19 +29,17 @@ const useSound = () => {
   };
 
   const prev = () => {
-    const index =
-      selectedTrack === 0 ? musicData.length - 1 : selectedTrack - 1;
+    const index = selectedTrack === 0 ? 0 : selectedTrack - 1;
 
     startMusicPlay(index);
-    console.log("prev");
   };
   const next = () => {
     const index =
-      selectedTrack === musicData.length - 1 ? 0 : selectedTrack + 1;
+      selectedTrack === musicData.length - 1
+        ? selectedTrack
+        : selectedTrack + 1;
 
     startMusicPlay(index);
-    play();
-    console.log("next");
   };
 
   const handleChangeShuffle = () => setShuffle(!shuffle);
@@ -150,6 +148,8 @@ const useSound = () => {
     playFromPosition,
     shuffle,
     handleChangeShuffle,
+    setSelectedTrack,
+    startMusicPlay,
   };
 };
 

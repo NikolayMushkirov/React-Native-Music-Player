@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import {
   StyleSheet,
@@ -7,19 +7,28 @@ import {
   Animated,
   Dimensions,
   Button,
+  FlatList
 } from "react-native";
 
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+import { EqualizerButtonsBox, PlayButtonsBox } from "../components/Wrappers";
 import { ShuffleButton } from "../components/Buttons";
 import ProgressBar from "../components/ProgressBar";
-import { EqualizerButtonsBox, PlayButtonsBox } from "../components/Wrappers";
-
 import MusicTracksSlider from "../components/MusicTracksSlider";
+
 import useSound from "../hooks/useSound";
+
 import { colors } from "../ui/colors";
+
+import { RootStackParamList } from "../types/navigator.types";
 
 const { width } = Dimensions.get("window");
 
-const PlayScreen = ({ navigation, route }) => {
+const PlayScreen = ({
+  navigation,
+  route,
+}: NativeStackScreenProps<RootStackParamList, "PlayScreen">) => {
   const {
     isPlaying,
     selectedTrack,
@@ -33,18 +42,14 @@ const PlayScreen = ({ navigation, route }) => {
     playFromPosition,
     shuffle,
     handleChangeShuffle,
-    setSelectedTrack,
     startMusicPlay,
   } = useSound();
-  const trackIndex = route.params.trackIndex;
+
+  const trackIndex = route.params.trackIndex
   const scrollX = useRef(new Animated.Value(0)).current;
-  const flatListRef = useRef(null);
+  const flatListRef = useRef<FlatList>(null);
 
   const [scrollIndex, setScrollIndex] = useState(selectedTrack);
-
-  const scrollToIndex = () => {
-    flatListRef?.current?.scrollToIndex({ index: selectedTrack });
-  };
 
   useEffect(() => {
     startMusicPlay(trackIndex);
@@ -61,16 +66,17 @@ const PlayScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (scrollIndex > selectedTrack) {
       next();
-    } else if (scrollIndex < selectedTrack) {
+    }
+    if (scrollIndex < selectedTrack) {
       prev();
     }
   }, [scrollIndex]);
 
-  // useEffect(() => {
-  //   if (flatListRef.current && selectedTrack) {
-  //     flatListRef?.current?.scrollToIndex({ index: selectedTrack });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (flatListRef.current && selectedTrack !== null) {
+      flatListRef.current.scrollToIndex({ animated: true, index: selectedTrack });
+    }
+  }, [selectedTrack]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -97,7 +103,6 @@ const PlayScreen = ({ navigation, route }) => {
           pause={pause}
           prev={prev}
           next={next}
-          scrollToIndex = {scrollToIndex}
         />
         <EqualizerButtonsBox />
       </View>

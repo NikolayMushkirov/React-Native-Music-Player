@@ -14,28 +14,22 @@ type Props = {
   selectedTrack: number;
   scrollX: Animated.Value;
   flatListRef: React.LegacyRef<FlatList<IMusicData>> | null;
-  prev: () => void;
-  next: () => void;
 };
 
 const { width } = Dimensions.get("window");
 
 const MusicTracksSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
-  const renderMusicTracks = () => {
+  const renderMusicTracks = ({ item }: { item: IMusicData }) => {
     return (
       <Animated.View style={styles.musicTrackContainer}>
         <View style={[styles.musicTrackBox, styles.elevation]}>
           <Image
-            source={{ uri: musicData[selectedTrack].albumCover.uri }}
+            source={{ uri: item.albumCover.uri }}
             style={styles.albumCover}
           />
           <View style={styles.artistContainer}>
-            <Text style={styles.songName}>
-              {musicData[selectedTrack].title}
-            </Text>
-            <Text style={styles.artistName}>
-              {musicData[selectedTrack].artist}
-            </Text>
+            <Text style={styles.songName}>{item.title}</Text>
+            <Text style={styles.artistName}>{item.artist}</Text>
           </View>
         </View>
       </Animated.View>
@@ -47,6 +41,7 @@ const MusicTracksSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
       data={musicData}
       renderItem={renderMusicTracks}
       keyExtractor={(item) => item.id}
+      initialScrollIndex={selectedTrack}
       horizontal
       pagingEnabled
       showsHorizontalScrollIndicator={false}

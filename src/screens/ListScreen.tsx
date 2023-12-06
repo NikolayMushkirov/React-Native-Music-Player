@@ -1,23 +1,23 @@
 import {
   FlatList,
   StyleSheet,
-  View,
   SafeAreaView,
-  Button,
   TouchableHighlight,
 } from "react-native";
 
-import MusicListItem from "../components/MusicListItem";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
 import { musicData } from "../utils/data";
 import { colors } from "../ui/colors";
-import useSound from "../hooks/useSound";
+
+import MusicListItem from "../components/MusicListItem";
+import { RootStackParamList } from "../types/navigator.types";
 
 type Props = {
-  navigation: unknown;
+  navigation: NativeStackNavigationProp<RootStackParamList, "ListScreen">;
 };
 
 const ListScreen = ({ navigation }: Props) => {
-  const { setSelectedTrack } = useSound();
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
