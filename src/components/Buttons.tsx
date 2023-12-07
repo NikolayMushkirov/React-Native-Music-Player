@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import IonIcons from "react-native-vector-icons/Ionicons";
 import AntIcon from "react-native-vector-icons/AntDesign";
@@ -122,6 +122,25 @@ const PlusButton = () => {
   );
 };
 
+const BackToPreviousScreen = ({
+  navigateToPreviousScreen,
+}: {
+  navigateToPreviousScreen: () => void;
+}) => {
+  return (
+    <View >
+      <TouchableOpacity onPress={navigateToPreviousScreen}>
+        <AntIcon
+          style={{ margin: 0, padding: 0 }}
+          name="left"
+          size={27}
+          color={colors.white}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 export {
   PlayButton,
   PauseButton,
@@ -132,4 +151,5 @@ export {
   HeartButton,
   SkipBackButton,
   SkipForwardButton,
+  BackToPreviousScreen,
 };

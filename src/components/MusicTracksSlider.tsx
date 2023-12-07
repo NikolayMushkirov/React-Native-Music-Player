@@ -42,6 +42,15 @@ const MusicTracksSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
       renderItem={renderMusicTracks}
       keyExtractor={(item) => item.id}
       initialScrollIndex={selectedTrack}
+      onScrollToIndexFailed={(info) => {
+        const wait = new Promise((resolve) => setTimeout(resolve, 100));
+        wait.then(() => {
+          flatListRef?.current?.scrollToIndex({
+            index: info.index,
+            animated: true,
+          });
+        });
+      }}
       horizontal
       pagingEnabled
       showsHorizontalScrollIndicator={false}
@@ -57,6 +66,7 @@ const MusicTracksSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
 const styles = StyleSheet.create({
   musicTrackContainer: {
     width: width,
+    maxHeight: "90%",
     justifyContent: "center",
     alignItems: "center",
   },

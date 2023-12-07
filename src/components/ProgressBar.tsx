@@ -40,7 +40,7 @@ export default ProgressBar;
 
 const styles = StyleSheet.create({
   progressBar: {
-    width: 350,
+    width: '100%',
     height: 40,
     marginTop: 25,
     flexDirection: "row",

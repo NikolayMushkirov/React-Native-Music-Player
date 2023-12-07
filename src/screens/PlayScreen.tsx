@@ -7,13 +7,13 @@ import {
   Animated,
   Dimensions,
   Button,
-  FlatList
+  FlatList,
 } from "react-native";
 
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { EqualizerButtonsBox, PlayButtonsBox } from "../components/Wrappers";
-import { ShuffleButton } from "../components/Buttons";
+import { BackToPreviousScreen, ShuffleButton } from "../components/Buttons";
 import ProgressBar from "../components/ProgressBar";
 import MusicTracksSlider from "../components/MusicTracksSlider";
 
@@ -45,15 +45,14 @@ const PlayScreen = ({
     startMusicPlay,
   } = useSound();
 
-  const trackIndex = route.params.trackIndex
+  const trackIndex = route.params.trackIndex;
+  const navigateToPreviousScreen = () => {
+    navigation.goBack();
+  };
   const scrollX = useRef(new Animated.Value(0)).current;
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList | null>(null);
 
   const [scrollIndex, setScrollIndex] = useState(selectedTrack);
-
-  useEffect(() => {
-    startMusicPlay(trackIndex);
-  }, []);
 
   useEffect(() => {
     scrollX.addListener(({ value }) => {
@@ -74,12 +73,23 @@ const PlayScreen = ({
 
   useEffect(() => {
     if (flatListRef.current && selectedTrack !== null) {
-      flatListRef.current.scrollToIndex({ animated: true, index: selectedTrack });
+      flatListRef.current.scrollToIndex({
+        animated: true,
+        index: selectedTrack,
+      });
     }
   }, [selectedTrack]);
 
+  useEffect(() => {
+    startMusicPlay(trackIndex);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
+      <BackToPreviousScreen
+        navigateToPreviousScreen={navigateToPreviousScreen}
+      />
+
       <MusicTracksSlider
         selectedTrack={selectedTrack}
         scrollX={scrollX}
@@ -106,7 +116,6 @@ const PlayScreen = ({
         />
         <EqualizerButtonsBox />
       </View>
-      <Button title="Back to the list" onPress={() => navigation.goBack()} />
     </SafeAreaView>
   );
 };
@@ -116,6 +125,8 @@ export default PlayScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "flex-start",
+    paddingTop: "10%",
     paddingBottom: "10%",
     backgroundColor: colors["background-dark"],
   },

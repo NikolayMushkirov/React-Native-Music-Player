@@ -16,6 +16,7 @@ const useSound = () => {
   const [duration, setDuration] = useState("00:00");
   const [progress, setProgress] = useState(0);
   console.log(selectedTrack, "selectedTrack");
+  console.log(musicTrackSource, 'source');
 
   const [shuffle, setShuffle] = useState(false);
 
