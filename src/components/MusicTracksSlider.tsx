@@ -11,9 +11,9 @@ import { IMusicData, musicData } from "../utils/data";
 import { colors } from "../ui/colors";
 
 type Props = {
-  selectedTrack: number;
+  selectedTrack: number | null;
   scrollX: Animated.Value;
-  flatListRef: React.LegacyRef<FlatList<IMusicData>> | null;
+  flatListRef: React.MutableRefObject<FlatList | null>;
 };
 
 const { width } = Dimensions.get("window");
@@ -42,15 +42,7 @@ const MusicTracksSlider = ({ selectedTrack, scrollX, flatListRef }: Props) => {
       renderItem={renderMusicTracks}
       keyExtractor={(item) => item.id}
       initialScrollIndex={selectedTrack}
-      onScrollToIndexFailed={(info) => {
-        const wait = new Promise((resolve) => setTimeout(resolve, 100));
-        wait.then(() => {
-          flatListRef?.current?.scrollToIndex({
-            index: info.index,
-            animated: true,
-          });
-        });
-      }}
+      onScrollToIndexFailed={(info) => info.index}
       horizontal
       pagingEnabled
       showsHorizontalScrollIndicator={false}

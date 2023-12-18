@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 import {
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Animated,
   Dimensions,
-  Button,
   FlatList,
 } from "react-native";
 
@@ -22,6 +21,7 @@ import useSound from "../hooks/useSound";
 import { colors } from "../ui/colors";
 
 import { RootStackParamList } from "../types/navigator.types";
+import { useFocusEffect } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
@@ -42,32 +42,43 @@ const PlayScreen = ({
     playFromPosition,
     shuffle,
     handleChangeShuffle,
-    startMusicPlay,
+    initiateMusicPlayback,
+    unloadSound,
   } = useSound();
-
-  const trackIndex = route.params.trackIndex;
-  const navigateToPreviousScreen = () => {
-    navigation.goBack();
-  };
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const flatListRef = useRef<FlatList | null>(null);
 
   const [scrollIndex, setScrollIndex] = useState(selectedTrack);
 
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const flatListRef = useRef<FlatList | null>(null);
+
+  const trackIndex = route.params.trackIndex;
+  const navigateToPreviousScreen = () => {
+    unloadSound();
+    navigation.goBack();
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      initiateMusicPlayback(trackIndex);
+    }, [trackIndex])
+  );
+
   useEffect(() => {
-    scrollX.addListener(({ value }) => {
+    const listener = scrollX.addListener(({ value }) => {
       const newIndex = Math.round(value / width);
       setScrollIndex(newIndex);
     });
-    return () => scrollX.removeAllListeners();
+    return () => scrollX.removeListener(listener);
   }, [scrollX]);
 
   useEffect(() => {
-    if (scrollIndex > selectedTrack) {
-      next();
-    }
-    if (scrollIndex < selectedTrack) {
-      prev();
+    if (scrollIndex !== null && selectedTrack !== null) {
+      if (scrollIndex > selectedTrack) {
+        next();
+      }
+      if (scrollIndex < selectedTrack) {
+        prev();
+      }
     }
   }, [scrollIndex]);
 
@@ -79,10 +90,6 @@ const PlayScreen = ({
       });
     }
   }, [selectedTrack]);
-
-  useEffect(() => {
-    startMusicPlay(trackIndex);
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

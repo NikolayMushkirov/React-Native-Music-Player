@@ -124,12 +124,13 @@ const PlusButton = () => {
 
 const BackToPreviousScreen = ({
   navigateToPreviousScreen,
+
 }: {
   navigateToPreviousScreen: () => void;
 }) => {
   return (
     <View >
-      <TouchableOpacity onPress={navigateToPreviousScreen}>
+      <TouchableOpacity onPress={() => {navigateToPreviousScreen()}}>
         <AntIcon
           style={{ margin: 0, padding: 0 }}
           name="left"

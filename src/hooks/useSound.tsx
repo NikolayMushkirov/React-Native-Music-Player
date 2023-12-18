@@ -7,67 +7,71 @@ const useSound = () => {
   const [sound, setSound] = useState<Sound | undefined | null>();
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const [selectedTrack, setSelectedTrack] = useState(0);
-  const [musicTrackSource, setMusicTrackSource] = useState(
-    musicData[selectedTrack].url
-  );
+  const [selectedTrack, setSelectedTrack] = useState<number | null>(0);
+  const [musicTrackSource, setMusicTrackSource] = useState("");
 
   const [position, setPosition] = useState("00:00");
   const [duration, setDuration] = useState("00:00");
   const [progress, setProgress] = useState(0);
-  console.log(selectedTrack, "selectedTrack");
-  console.log(musicTrackSource, 'source');
 
   const [shuffle, setShuffle] = useState(false);
 
-  const startMusicPlay = (index: number) => {
+  const handleChangeShuffle = () => setShuffle(!shuffle);
+
+  const initiateMusicPlayback = (index: number) => {
     if (index !== null) {
       setSelectedTrack(index);
       setMusicTrackSource(musicData[index].url);
-    } else {
-      setMusicTrackSource("");
     }
   };
 
   const prev = () => {
-    const index = selectedTrack === 0 ? 0 : selectedTrack - 1;
-
-    startMusicPlay(index);
+    if (selectedTrack !== null) {
+      const index = selectedTrack === 0 ? 0 : selectedTrack - 1;
+      initiateMusicPlayback(index);
+    }
   };
   const next = () => {
-    const index =
-      selectedTrack === musicData.length - 1
-        ? selectedTrack
-        : selectedTrack + 1;
-
-    startMusicPlay(index);
+    if (selectedTrack !== null) {
+      const index =
+        selectedTrack === musicData.length - 1
+          ? selectedTrack
+          : selectedTrack + 1;
+      initiateMusicPlayback(index);
+    }
   };
 
-  const handleChangeShuffle = () => setShuffle(!shuffle);
-
   const play = async () => {
-    if (!isPlaying) {
-      sound && (await sound.playAsync());
+    if (sound?._loaded && (await sound.playAsync())) {
       setIsPlaying(true);
     }
   };
 
   const pause = async () => {
-    if (isPlaying) {
-      sound && (await sound.pauseAsync());
+    if (sound?._loaded && (await sound.pauseAsync())) {
       setIsPlaying(false);
     }
   };
 
+  const calcPositionProgress = async () => {
+    const status = await sound?.getStatusAsync();
+    if (status?.isLoaded && status.durationMillis) {
+      const progress = status?.positionMillis / status?.durationMillis;
+      setPosition(getMusicTrackTime(status?.positionMillis));
+      setProgress(progress);
+    }
+
+    if (progress === 1) {
+      pause();
+    }
+  };
+
   const playFromPosition = async (progress: number) => {
-    if (sound) {
-      const status = await sound.getStatusAsync();
-      if (status.isLoaded && status.durationMillis) {
-        console.log(progress, "progress");
-        const milliSec = Math.ceil(status.durationMillis * progress);
-        await sound.setPositionAsync(milliSec);
-        calcPositionProgress();
-      }
+    const status = await sound?.getStatusAsync();
+    if (status?.isLoaded && status?.durationMillis) {
+      const milliSec = Math.ceil(status.durationMillis * progress);
+      await sound?.setPositionAsync(milliSec);
+      calcPositionProgress();
     }
   };
 
@@ -83,8 +87,8 @@ const useSound = () => {
     const { sound } = await Audio.Sound.createAsync({ uri: musicTrackSource });
     const status = await sound.getStatusAsync();
     if (status.isLoaded && status.durationMillis) {
-      setDuration(getMusicTrackTime(status.durationMillis));
       setSound(sound);
+      setDuration(getMusicTrackTime(status.durationMillis));
     }
   };
 
@@ -94,20 +98,6 @@ const useSound = () => {
     setProgress(0);
     await sound?.unloadAsync();
     setSound(null);
-  };
-
-  const calcPositionProgress = async () => {
-    const status = await sound?.getStatusAsync();
-    if (status?.isLoaded && status.durationMillis) {
-      const progress = status?.positionMillis / status?.durationMillis;
-      console.log(progress, "progress");
-      setPosition(getMusicTrackTime(status?.positionMillis));
-      setProgress(progress);
-    }
-
-    if (progress === 1) {
-      pause();
-    }
   };
 
   useEffect(() => {
@@ -150,7 +140,11 @@ const useSound = () => {
     shuffle,
     handleChangeShuffle,
     setSelectedTrack,
-    startMusicPlay,
+    initiateMusicPlayback,
+    musicTrackSource,
+    unloadSound,
+    loadSound,
+    sound,
   };
 };
 
